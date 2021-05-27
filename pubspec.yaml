@@ -1,7 +1,9 @@
 name: app_upgrade
-description: flutter android  app upgrade
+description: Android download and upgrade APK, custom UI components support download progress callback
 version: 0.0.1
-homepage:
+homepage: https://github.com/UseZwb
+repository: https://github.com/UseZwb/app_upgrade
+issue_tracker: https://github.com/UseZwb/app_upgrade/issues
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
