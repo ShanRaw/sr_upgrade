@@ -2,32 +2,20 @@
 
 *Android download and upgrade APK, custom UI components support download progress callback*
 
-## 使用
-```dart
- AppUpgrade.show(context,
-                downloadCloseForUpgradeWindow: true,
-                info: AppUpgradeModel(
-                    apkDownloadUrl:
-                        'xxx.apk',
-                    title: '测试升级',
-                    contents: [
-                      '1.修复一直bug',
-                      '2.修复已知问题',
-                    ]), progressCallback: (int count, int total) {
-              ///这可以state显示下载进度
-              setState(() {
-                step = (count / total * 100).toStringAsFixed(2);
-              });
-            })
-
+## 添加依赖
+```yaml
+dependencies:
+  sr_upgrade: ^0.0.1
 ```
-## 自定义UI
+
+## 使用
+- 引入
 ```dart
-class CustomAppUpgradeDialog extends AppUpgradeDialog {
-  final AppUpgradeModel info;
-
-  CustomAppUpgradeDialog({required this.info});
-
+import 'package:sr_upgrade/sr_upgrade.dart';
+```
+- 继承SrUpgradeDialog 创建UI
+```dart
+class CustomSrUpgradeDialog extends SrUpgradeDialog {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -43,34 +31,27 @@ class CustomAppUpgradeDialog extends AppUpgradeDialog {
           child: Column(
             children: [
               Text(
-                info.title ?? '',
+                '这里是自定义升级弹窗',
                 style: TextStyle(
                     fontSize: 16, color: Color(0xff333333), height: 2),
               ),
-              Expanded(
-                  child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                children: info.contents!
-                    .map((e) => Text(
-                          e,
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey, height: 1.6),
-                        ))
-                    .toList(),
-              )),
+              Expanded(child: Container()),
               Container(
                 height: 50,
                 child: Row(
                   children: [
-                    info.force != true
-                        ? Expanded(
-                            child: TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('取消')),
-                          )
-                        : Container(),
                     Expanded(
-                      child: TextButton(onPressed: onOk, child: Text('升级')),
+                      child: TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('取消')),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onOk();
+                          },
+                          child: Text('升级')),
                     ),
                   ],
                 ),
@@ -90,17 +71,16 @@ class CustomAppUpgradeDialog extends AppUpgradeDialog {
 
   @override
   onOk() {
-    AppUpgrade.upgrade(info.apkDownloadUrl);
+    SrUpgrade.upgrade(
+        'https://wbdear.oss-cn-beijing.aliyuncs.com/sr_upgrade/app-release.apk');
   }
 }
 ```
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+- 调用SrUpgrade.show
+```dart
+    SrUpgrade.show(context,
+        barrierDismissible: false,
+        appUpgradeDialog: CustomSrUpgradeDialog(),
+        progressCallback: (int count, int total) {
+    });
+```

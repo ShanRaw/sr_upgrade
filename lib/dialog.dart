@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppUpgradeDialog extends StatelessWidget with AppUpgradeDialogDelegate {
+class SrUpgradeDialog extends StatelessWidget with AppUpgradeDialogDelegate {
   @override
   Widget build(BuildContext context) {
     return Container();
