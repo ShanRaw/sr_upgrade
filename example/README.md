@@ -1,6 +1,6 @@
 ```dart
 import 'package:flutter/material.dart';
-import 'package:app_upgrade/app_upgrade.dart';
+import 'package:sr_upgrade/sr_upgrade.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +27,67 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+class CustomSrUpgradeDialog extends SrUpgradeDialog {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Container(
+        alignment: Alignment.center,
+        child: Container(
+          width: 250,
+          height: 300,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Column(
+            children: [
+              Text(
+                '这里是自定义升级弹窗',
+                style: TextStyle(
+                    fontSize: 16, color: Color(0xff333333), height: 2),
+              ),
+              Expanded(child: Container()),
+              Container(
+                height: 50,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('取消')),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onOk();
+                          },
+                          child: Text('升级')),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      color: Colors.transparent,
+    );
+  }
+
+  @override
+  onCancel() {
+    // TODO: implement onCancel
+  }
+
+  @override
+  onOk() {
+    SrUpgrade.upgrade(
+        'https://wbdear.oss-cn-beijing.aliyuncs.com/sr_upgrade/app-release.apk');
+  }
+}
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -35,33 +96,32 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String step = '0.00';
 
+  _upgrade() {
+    SrUpgrade.show(context,
+        barrierDismissible: false,
+        appUpgradeDialog: CustomSrUpgradeDialog(),
+        progressCallback: (int count, int total) {
+      setState(() {
+        step = (count / total * 100).toStringAsFixed(2);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
       ),
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            AppUpgrade.show(context,
-                downloadCloseForUpgradeWindow: true,
-                info: AppUpgradeModel(
-                    apkDownloadUrl:
-                        'https://wbdear.oss-cn-beijing.aliyuncs.com/one-book-school-apk/school_v1.0.0%2Bhotfix.2.apk',
-                    title: '测试升级',
-                    contents: [
-                      '1.修复一直bug',
-                      '2.修复已知问题',
-                    ]), progressCallback: (int count, int total) {
-              setState(() {
-                step = (count / total * 100).toStringAsFixed(2);
-              });
-            });
-          },
-          child: Column(
-            children: [
-              Container(
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: _upgrade,
+              child: Container(
                 width: 200,
                 height: 50,
                 decoration: BoxDecoration(
@@ -73,9 +133,9 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-              Text('当前下载进度$step%')
-            ],
-          ),
+            ),
+            Text('当前下载进度$step%')
+          ],
         ),
       ),
     );
