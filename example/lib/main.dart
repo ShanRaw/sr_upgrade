@@ -26,67 +26,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class CustomSrUpgradeDialog extends SrUpgradeDialog {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        alignment: Alignment.center,
-        child: Container(
-          width: 250,
-          height: 300,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Column(
-            children: [
-              Text(
-                '这里是自定义升级弹窗',
-                style: TextStyle(
-                    fontSize: 16, color: Color(0xff333333), height: 2),
-              ),
-              Expanded(child: Container()),
-              Container(
-                height: 50,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('取消')),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onOk();
-                          },
-                          child: Text('升级')),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-      color: Colors.transparent,
-    );
-  }
-
-  @override
-  onCancel() {
-    // TODO: implement onCancel
-  }
-
-  @override
-  onOk() {
-    SrUpgrade.upgrade(
-        'https://wbdear.oss-cn-beijing.aliyuncs.com/sr_upgrade/app-release.apk');
-  }
-}
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -96,15 +35,15 @@ class _HomeState extends State<Home> {
   String step = '0.00';
 
   _upgrade() {
-    SrUpgrade.show(context,
-        barrierDismissible: false,
-        appUpgradeDialog: CustomSrUpgradeDialog(),
+    SrUpgrade.upgrade(
+        'https://dldir1.qq.com/weixin/android/weixin806android1900_arm64.apk',
         progressCallback: (int count, int total) {
       setState(() {
         step = (count / total * 100).toStringAsFixed(2);
       });
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

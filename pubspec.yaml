@@ -1,6 +1,6 @@
 name: sr_upgrade
 description: Android download and upgrade APK, custom UI components support download progress callback
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/UseZwb
 repository: https://github.com/UseZwb/sr_upgrade
 issue_tracker: https://github.com/UseZwb/sr_upgrade/issues
