@@ -37,7 +37,7 @@ class AppUpgradePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         @JvmStatic
         fun registerWith(registrar: PluginRegistry.Registrar) {
-            this.mContext = registrar.activity()
+            this.mContext = registrar.activeContext()
             val channel = MethodChannel(registrar.messenger(), "app_upgrade")
             channel.setMethodCallHandler(AppUpgradePlugin())
         }
